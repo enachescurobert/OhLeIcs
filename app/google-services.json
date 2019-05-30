@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "529177591980",
+    "firebase_url": "https://oh-le-ics.firebaseio.com",
+    "project_id": "oh-le-ics",
+    "storage_bucket": "oh-le-ics.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:529177591980:android:4234f16e2fe29c13",
+        "android_client_info": {
+          "package_name": "enachescurobert.com.ohleics"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "529177591980-lafgmorvees6k6cuga0aqc9c5fg90ur6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeKSC5_oP7jdLNZeLjLhzNzyyFtFgkl8Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "529177591980-lafgmorvees6k6cuga0aqc9c5fg90ur6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
