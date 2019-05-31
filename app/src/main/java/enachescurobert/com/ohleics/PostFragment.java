@@ -34,6 +34,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
 import enachescurobert.com.ohleics.models.Post;
+import enachescurobert.com.ohleics.util.RotateBitmap;
 import enachescurobert.com.ohleics.util.UniversalImageLoader;
 
 public class PostFragment extends Fragment implements SelectPhotoDialog.OnPhotoSelectedListener {
@@ -168,8 +169,10 @@ public class PostFragment extends Fragment implements SelectPhotoDialog.OnPhotoS
 
             if(mBitmap == null){
                 try{
-                    //RotateBitmap rotateBitmap = new RotateBitmap();
-                    mBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), params[0]);
+
+                    //mBitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), params[0]);
+                    RotateBitmap rotateBitmap = new RotateBitmap();
+                    mBitmap = rotateBitmap.HandleSamplingAndRotationBitmap(getActivity(), params[0]);
                 }catch (IOException e){
                     Log.e(TAG, "doInBackground: IOException: " + e.getMessage());
                 }
