@@ -42,6 +42,12 @@ dependencies {
     //Universal image loader
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
 
+    //Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.5.0'
+
+    //Retrofit GSON library
+    implementation 'com.squareup.retrofit2:converter-gson:2.5.0'
+
 
     /*
         ---------- Firebase -----------
@@ -58,5 +64,7 @@ dependencies {
 
     //Firebase Core
     implementation 'com.google.firebase:firebase-core:16.0.1'
+
+
 }
 apply plugin: 'com.google.gms.google-services'
