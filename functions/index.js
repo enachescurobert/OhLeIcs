@@ -12,8 +12,8 @@ exports.indexPostsToElastic = functions.database.ref('/posts/{post_id}')
 		
 		let elasticSearchConfig = functions.config().elasticsearch;
         //let elasticSearchUrl = elasticSearchConfig.url + 'posts/post/' + post_id;
-		//let elasticSearchUrl = elasticSearchConfig.url + 'posts/' + post_id;
-		let elasticSearchUrl = elasticSearchConfig.url + 'posts/_doc/' + post_id;
+		let elasticSearchUrl = elasticSearchConfig.url + '/posts/' + post_id;
+		//let elasticSearchUrl = elasticSearchConfig.url + 'posts/_doc/' + post_id;
 		let elasticSearchMethod = postData ? 'POST' : 'DELETE';
 		
 		let elasticSearchRequest = {
