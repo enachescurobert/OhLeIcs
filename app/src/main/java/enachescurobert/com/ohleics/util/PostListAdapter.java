@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import enachescurobert.com.ohleics.R;
 import enachescurobert.com.ohleics.SearchActivity;
 import enachescurobert.com.ohleics.SearchFragment;
+import enachescurobert.com.ohleics.WatchListFragment;
 import enachescurobert.com.ohleics.models.Post;
 
 public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHolder>{
@@ -81,6 +82,11 @@ public class PostListAdapter extends RecyclerView.Adapter<PostListAdapter.ViewHo
                     //Watchlist Fragment( #1)
                     else if(fragment.getTag().equals("android:switcher:" + R.id.viewpager_container + ":1")){
                         Log.d(TAG, "onClick: switching to: " + mContext.getString(R.string.fragment_watch_list));
+
+                        WatchListFragment watchListFragment = (WatchListFragment) ((SearchActivity)mContext).getSupportFragmentManager()
+                                .findFragmentByTag("android:switcher:" + R.id.viewpager_container+ ":" +
+                                        ((SearchActivity)mContext).mViewPager.getCurrentItem());
+                        watchListFragment.viewPost(mPosts.get(pos).getPost_id());
 
                     }
                 }
