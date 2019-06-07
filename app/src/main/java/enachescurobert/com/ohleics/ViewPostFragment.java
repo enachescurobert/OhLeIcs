@@ -1,11 +1,15 @@
 package enachescurobert.com.ohleics;
 
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BlurMaskFilter;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.os.Bundle;
-import android.provider.ContactsContract;
-import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -23,10 +27,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
-import org.w3c.dom.Text;
-
 import enachescurobert.com.ohleics.models.Post;
 import enachescurobert.com.ohleics.util.UniversalImageLoader;
+
 
 public class ViewPostFragment extends Fragment {
 
@@ -49,11 +52,11 @@ public class ViewPostFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_view_post, container, false);
         mContactSeller = (TextView) view.findViewById(R.id.post_contact);
         mTitle = (TextView) view.findViewById(R.id.post_title);
-        mDescription =(TextView) view.findViewById(R.id.post_description);
+        mDescription = (TextView) view.findViewById(R.id.post_description);
         mPrice = (TextView) view.findViewById(R.id.post_price);
         mLocation = (TextView) view.findViewById(R.id.post_location);
         mClose = (ImageView) view.findViewById(R.id.post_close);
@@ -68,14 +71,32 @@ public class ViewPostFragment extends Fragment {
         return view;
     }
 
-
-    //we need to retrieve the data using the mPostId
-    //we will query the db and retrieve the rest of the info for the post
-
     private void init(){
         getPostInfo();
 
+        mContactSeller.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent emailIntent = new Intent(Intent.ACTION_SEND);
+                emailIntent.setType("plain/text");
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[] {mPost.getContact_email()});
+                getActivity().startActivity(emailIntent);
+            }
+        });
 
+        mClose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(TAG, "onClick: closing post.");
+                getActivity().getSupportFragmentManager().popBackStack();
+            }
+        });
+
+        mSavePost.setShadowLayer(5, 0 , 0, Color.BLUE);
+        mWatchList.setImageBitmap(createOutline(BitmapFactory.decodeResource(getResources(), R.drawable.ic_save_white)));
+        mWatchList.setColorFilter(Color.BLUE);
+        mClose.setImageBitmap(createOutline(BitmapFactory.decodeResource(getResources(), R.drawable.ic_x_white)));
+        mClose.setColorFilter(Color.BLUE);
     }
 
     private void getPostInfo(){
@@ -89,7 +110,7 @@ public class ViewPostFragment extends Fragment {
 
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+            public void onDataChange(DataSnapshot dataSnapshot) {
                 DataSnapshot singleSnapshot = dataSnapshot.getChildren().iterator().next();
                 if(singleSnapshot != null){
                     mPost = singleSnapshot.getValue(Post.class);
@@ -103,24 +124,20 @@ public class ViewPostFragment extends Fragment {
                         price = "$" + mPost.getPrice();
                     }
                     mPrice.setText(price);
-
                     String location = mPost.getCity() + ", " + mPost.getState_province() + ", " +
                             mPost.getCountry();
                     mLocation.setText(location);
-                    mTitle.setText(mPost.getTitle());
-
                     UniversalImageLoader.setImage(mPost.getImage(), mPostImage);
                 }
             }
 
             @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+            public void onCancelled(DatabaseError databaseError) {
 
             }
         });
     }
 
-    //is responsible to closing the window when navigating to the fragment
     private void hideSoftKeyboard(){
         final Activity activity = getActivity();
         final InputMethodManager inputManager = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -128,4 +145,22 @@ public class ViewPostFragment extends Fragment {
         inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
+    private Bitmap createOutline(Bitmap src){
+        if(src != null){
+            Paint p = new Paint();
+            p.setMaskFilter(new BlurMaskFilter(2, BlurMaskFilter.Blur.OUTER));
+            return src.extractAlpha(p, null);
+        }else {
+            return src;
+        }
+    }
 }
+
+
+
+
+
+
+
+
+
