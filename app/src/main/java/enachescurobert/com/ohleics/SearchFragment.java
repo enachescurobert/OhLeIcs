@@ -45,7 +45,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class SearchFragment extends Fragment {
 
     private static final String TAG = "SearchFragment";
-    private static final String BASE_URL = "https://35.228.155.106//elasticsearch/posts/";
+    private static final String BASE_URL = "http://35.228.155.106//elasticsearch/posts/";
 
     //widgets
     private ImageView mFilters;
@@ -90,6 +90,8 @@ public class SearchFragment extends Fragment {
                         || event.getKeyCode() == KeyEvent.KEYCODE_ENTER){
 
                     mPosts = new ArrayList<Post>();
+
+
 
                     Retrofit retrofit = new Retrofit.Builder()
                             .baseUrl(BASE_URL)
