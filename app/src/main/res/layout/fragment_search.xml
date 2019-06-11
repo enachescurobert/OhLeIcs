@@ -32,9 +32,18 @@
                 android:layout_width="50dp"
                 android:layout_height="50dp"
                 android:id="@+id/ic_search"
-                android:layout_alignParentRight="true"
+                android:layout_toLeftOf="@+id/ic_filter"
                 android:layout_centerVertical="true"
                 android:src="@drawable/ic_search"
+                android:layout_marginRight="5dp"/>
+
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:id="@+id/ic_filter"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_filter"
                 android:layout_marginRight="5dp"/>
 
 

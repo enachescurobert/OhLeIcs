@@ -220,8 +220,11 @@ public class ViewPostFragment extends Fragment {
     private void hideSoftKeyboard(){
         final Activity activity = getActivity();
         final InputMethodManager inputManager = (InputMethodManager)activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+        View focusedView = getActivity().getCurrentFocus();
 
-        inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        if (focusedView != null) {
+            inputManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     private Bitmap createOutline(Bitmap src){

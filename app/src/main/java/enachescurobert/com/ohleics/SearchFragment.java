@@ -58,6 +58,7 @@ public class SearchFragment extends Fragment {
 
     //widgets
     private ImageView mFilters;
+    private ImageView mSearch;
     private EditText mSearchText;
     private FrameLayout mFrameLayout;
 
@@ -74,7 +75,8 @@ public class SearchFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
-        mFilters = (ImageView) view.findViewById(R.id.ic_search);
+        mFilters = (ImageView) view.findViewById(R.id.ic_filter);
+        mSearch = (ImageView) view.findViewById(R.id.ic_search);
         mSearchText = (EditText) view.findViewById(R.id.input_search);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mFrameLayout = (FrameLayout) view.findViewById(R.id.container);
@@ -103,6 +105,14 @@ public class SearchFragment extends Fragment {
                 startActivity(intent);
             }
         });
+
+        mSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                   search();
+                }
+            });
 
         mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -242,6 +252,81 @@ public class SearchFragment extends Fragment {
 
         Log.d(TAG, "getFilters: got filters: \ncity: " + mPrefCity + "\nState/Prov: " + mPrefStateProv
                 + "\nCountry: " + mPrefCountry);
+    }
+
+    public void search(){
+        mPosts = new ArrayList<Post>();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        ElasticSearchApi searchAPI = retrofit.create(ElasticSearchApi.class);
+
+        HashMap<String, String> headerMap = new HashMap<String, String>();
+        headerMap.put("Authorization", Credentials.basic("user", mElasticSearchPassword));
+
+        String searchString = "";
+
+        if(!mSearchText.equals("")){
+            searchString = searchString + mSearchText.getText().toString() + "*";
+        }
+        if(!mPrefCity.equals("")){
+            searchString = searchString + " city:" + mPrefCity;
+        }
+        if(!mPrefStateProv.equals("")){
+            searchString = searchString + " state_province:" + mPrefStateProv;
+        }
+        if(!mPrefCountry.equals("")){
+            searchString = searchString + " country:" + mPrefCountry;
+        }
+
+        Call<HitsObject> call = searchAPI.search(headerMap, "AND", searchString);
+
+        call.enqueue(new Callback<HitsObject>() {
+            @Override
+            public void onResponse(Call<HitsObject> call, Response<HitsObject> response) {
+
+                HitsList hitsList = new HitsList();
+                String jsonResponse = "";
+                try{
+                    Log.d(TAG, "onResponse: server response: " + response.toString());
+
+                    if(response.isSuccessful()){
+                        hitsList = response.body().getHits();
+                    }else{
+                        jsonResponse = response.errorBody().string();
+                    }
+
+                    Log.d(TAG, "onResponse: hits: " + hitsList);
+
+                    for(int i = 0; i < hitsList.getPostIndex().size(); i++){
+                        Log.d(TAG, "onResponse: data: " + hitsList.getPostIndex().get(i).getPost().toString());
+                        mPosts.add(hitsList.getPostIndex().get(i).getPost());
+                    }
+
+                    Log.d(TAG, "onResponse: size: " + mPosts.size());
+                    //setup the list of posts
+                    setupPostsList();
+
+                }catch (NullPointerException e){
+                    Log.e(TAG, "onResponse: NullPointerException: " + e.getMessage() );
+                }
+                catch (IndexOutOfBoundsException e){
+                    Log.e(TAG, "onResponse: IndexOutOfBoundsException: " + e.getMessage() );
+                }
+                catch (IOException e){
+                    Log.e(TAG, "onResponse: IOException: " + e.getMessage() );
+                }
+            }
+
+            @Override
+            public void onFailure(Call<HitsObject> call, Throwable t) {
+                Log.e(TAG, "onFailure: " + t.getMessage() );
+                Toast.makeText(getActivity(), "search failed", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
