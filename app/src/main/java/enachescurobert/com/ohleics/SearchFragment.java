@@ -107,7 +107,7 @@ public class SearchFragment extends Fragment {
         if (mPosts.size() < 1){
             mEmpyListImage.setVisibility(View.VISIBLE);
             mText1.setVisibility(View.VISIBLE);
-            mText1.setText("Nu au fost găsite rezultate.");
+            mText1.setText("No results for \"" + mSearchText.getText() + "\", sorry.");
             mText2.setVisibility(View.GONE);
         }else {
             mEmpyListImage.setVisibility(View.GONE);
@@ -278,15 +278,8 @@ public class SearchFragment extends Fragment {
                 Toast.makeText(getActivity(), "search failed", Toast.LENGTH_SHORT).show();
             }
         });
-
-//        Log.d(TAG, "search(): mPosts has " + mPosts.size() + "posts");
-//        if (mPosts.size() < 1){
-//            mEmpyListImage.setVisibility(View.VISIBLE);
-//        }else {
-//            mEmpyListImage.setVisibility(View.GONE);
-//        }
-
-
     }
+
+
 
 }

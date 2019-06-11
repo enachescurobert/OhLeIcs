@@ -76,7 +76,7 @@
         android:id="@+id/empty_list_text"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Aici puteti găsi tot ce vă trebuie!"
+        android:text="Here you can find everything you need!"
         android:layout_below="@id/empty_list_image"
         android:textSize="20sp"
         />
@@ -87,7 +87,7 @@
         android:id="@+id/empty_list_text2"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:text="Cat si ce nu va trebuie."
+        android:text="And what you don't need."
         android:layout_below="@id/empty_list_text"
         />
 

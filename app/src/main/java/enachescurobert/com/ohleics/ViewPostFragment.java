@@ -200,7 +200,7 @@ public class ViewPostFragment extends Fragment {
 
                     String price = "FREE";
                     if(mPost.getPrice() != null){
-                        price = mPost.getPrice() + " RON";
+                        price = mPost.getPrice() + "€";
                     }
                     mPrice.setText(price);
                     String location = mPost.getCity() + ", " + mPost.getState_province() + ", " +
