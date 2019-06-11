@@ -122,78 +122,8 @@ public class SearchFragment extends Fragment {
                         || event.getAction() == KeyEvent.ACTION_DOWN
                         || event.getKeyCode() == KeyEvent.KEYCODE_ENTER){
 
-                    mPosts = new ArrayList<Post>();
+                    search();
 
-                    Retrofit retrofit = new Retrofit.Builder()
-                            .baseUrl(BASE_URL)
-                            .addConverterFactory(GsonConverterFactory.create())
-                            .build();
-
-                    ElasticSearchApi searchAPI = retrofit.create(ElasticSearchApi.class);
-
-                    HashMap<String, String> headerMap = new HashMap<String, String>();
-                    headerMap.put("Authorization", Credentials.basic("user", mElasticSearchPassword));
-
-                    String searchString = "";
-
-                    if(!mSearchText.equals("")){
-                        searchString = searchString + mSearchText.getText().toString() + "*";
-                    }
-                    if(!mPrefCity.equals("")){
-                        searchString = searchString + " city:" + mPrefCity;
-                    }
-                    if(!mPrefStateProv.equals("")){
-                        searchString = searchString + " state_province:" + mPrefStateProv;
-                    }
-                    if(!mPrefCountry.equals("")){
-                        searchString = searchString + " country:" + mPrefCountry;
-                    }
-
-                    Call<HitsObject> call = searchAPI.search(headerMap, "AND", searchString);
-
-                    call.enqueue(new Callback<HitsObject>() {
-                        @Override
-                        public void onResponse(Call<HitsObject> call, Response<HitsObject> response) {
-
-                            HitsList hitsList = new HitsList();
-                            String jsonResponse = "";
-                            try{
-                                Log.d(TAG, "onResponse: server response: " + response.toString());
-
-                                if(response.isSuccessful()){
-                                    hitsList = response.body().getHits();
-                                }else{
-                                    jsonResponse = response.errorBody().string();
-                                }
-
-                                Log.d(TAG, "onResponse: hits: " + hitsList);
-
-                                for(int i = 0; i < hitsList.getPostIndex().size(); i++){
-                                    Log.d(TAG, "onResponse: data: " + hitsList.getPostIndex().get(i).getPost().toString());
-                                    mPosts.add(hitsList.getPostIndex().get(i).getPost());
-                                }
-
-                                Log.d(TAG, "onResponse: size: " + mPosts.size());
-                                //setup the list of posts
-                                setupPostsList();
-
-                            }catch (NullPointerException e){
-                                Log.e(TAG, "onResponse: NullPointerException: " + e.getMessage() );
-                            }
-                            catch (IndexOutOfBoundsException e){
-                                Log.e(TAG, "onResponse: IndexOutOfBoundsException: " + e.getMessage() );
-                            }
-                            catch (IOException e){
-                                Log.e(TAG, "onResponse: IOException: " + e.getMessage() );
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<HitsObject> call, Throwable t) {
-                            Log.e(TAG, "onFailure: " + t.getMessage() );
-                            Toast.makeText(getActivity(), "search failed", Toast.LENGTH_SHORT).show();
-                        }
-                    });
                 }
 
                 return false;
