@@ -60,8 +60,37 @@
         android:layout_below="@+id/search_toolbar"
         android:background="@color/lightGrey">
 
-
     </android.support.v7.widget.RecyclerView>
+
+    <ImageView
+        android:id="@+id/empty_list_image"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/empty_list"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/empty_list_text"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="Aici puteti găsi tot ce vă trebuie!"
+        android:layout_below="@id/empty_list_image"
+        android:textSize="20sp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/empty_list_text2"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="Cat si ce nu va trebuie."
+        android:layout_below="@id/empty_list_text"
+        />
+
 
 
     <FrameLayout

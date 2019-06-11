@@ -59,8 +59,11 @@ public class SearchFragment extends Fragment {
     //widgets
     private ImageView mFilters;
     private ImageView mSearch;
+    private ImageView mEmpyListImage;
     private EditText mSearchText;
     private FrameLayout mFrameLayout;
+    private TextView mText1;
+    private TextView mText2;
 
     //vars
     private String mElasticSearchPassword;
@@ -77,12 +80,17 @@ public class SearchFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_search, container, false);
         mFilters = (ImageView) view.findViewById(R.id.ic_filter);
         mSearch = (ImageView) view.findViewById(R.id.ic_search);
+        mEmpyListImage = (ImageView) view.findViewById(R.id.empty_list_image);
         mSearchText = (EditText) view.findViewById(R.id.input_search);
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerView);
         mFrameLayout = (FrameLayout) view.findViewById(R.id.container);
+        mText1 = (TextView) view.findViewById(R.id.empty_list_text);
+        mText2 = (TextView) view.findViewById(R.id.empty_list_text2);
 
         getElasticSearchPassword();
         init();
+
+        //search();
 
         return view;
     }
@@ -94,6 +102,18 @@ public class SearchFragment extends Fragment {
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mAdapter = new PostListAdapter(getActivity(), mPosts);
         mRecyclerView.setAdapter(mAdapter);
+
+        Log.d(TAG, "search(): mPosts has " + mPosts.size() + "posts");
+        if (mPosts.size() < 1){
+            mEmpyListImage.setVisibility(View.VISIBLE);
+            mText1.setVisibility(View.VISIBLE);
+            mText1.setText("Nu au fost găsite rezultate.");
+            mText2.setVisibility(View.GONE);
+        }else {
+            mEmpyListImage.setVisibility(View.GONE);
+            mText1.setVisibility(View.GONE);
+            mText2.setVisibility(View.GONE);
+        }
     }
 
     private void init(){
@@ -185,6 +205,7 @@ public class SearchFragment extends Fragment {
     }
 
     public void search(){
+
         mPosts = new ArrayList<Post>();
 
         Retrofit retrofit = new Retrofit.Builder()
@@ -202,13 +223,13 @@ public class SearchFragment extends Fragment {
         if(!mSearchText.equals("")){
             searchString = searchString + mSearchText.getText().toString() + "*";
         }
-        if(!mPrefCity.equals("")){
+        if(mPrefCity != null && !mPrefCity.equals("")){
             searchString = searchString + " city:" + mPrefCity;
         }
-        if(!mPrefStateProv.equals("")){
+        if(mPrefStateProv != null && !mPrefStateProv.equals("")){
             searchString = searchString + " state_province:" + mPrefStateProv;
         }
-        if(!mPrefCountry.equals("")){
+        if(mPrefCountry != null && !mPrefCountry.equals("")){
             searchString = searchString + " country:" + mPrefCountry;
         }
 
@@ -257,6 +278,15 @@ public class SearchFragment extends Fragment {
                 Toast.makeText(getActivity(), "search failed", Toast.LENGTH_SHORT).show();
             }
         });
+
+//        Log.d(TAG, "search(): mPosts has " + mPosts.size() + "posts");
+//        if (mPosts.size() < 1){
+//            mEmpyListImage.setVisibility(View.VISIBLE);
+//        }else {
+//            mEmpyListImage.setVisibility(View.GONE);
+//        }
+
+
     }
 
 }
